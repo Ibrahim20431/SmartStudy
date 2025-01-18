@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +35,9 @@ import com.example.onlineshop.R
 import com.example.onlineshop.presentation.components.CountCard
 import com.example.onlineshop.presentation.components.DashboardScreenTopBar
 import com.example.onlineshop.domain.model.Subject
+import com.example.onlineshop.domain.model.Task
 import com.example.onlineshop.presentation.components.SubjectCard
+import com.example.onlineshop.presentation.components.tasksList
 
 @Preview(showBackground = true)
 @Composable
@@ -47,6 +50,7 @@ fun DashboardScrean() {
         Subject("English", 13f , Subject.subjectsCardColors[3]),
         Subject("Arabic", 13f , Subject.subjectsCardColors[4])
     )
+    val tasksList: List<Task> = listOf()
 
     Scaffold (
         topBar = { DashboardScreenTopBar() }
@@ -74,6 +78,22 @@ fun DashboardScrean() {
                     subjectList = subjectList
                 )
             }
+
+            item {
+                Button(
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 48.dp, vertical = 20.dp)
+                ) {
+                    Text(text = "Start Study Session")
+                }
+            }
+
+            tasksList(
+                sectionTitle = "UPCOMING TASKS",
+                emptyListText = "You don't have any upcoming tasks.\nplease, Click on + to add new subject",
+                tasks = tasksList
+            )
         }
 
     }
@@ -113,9 +133,6 @@ fun CountCardSection(
             count = goalHours
         )
     }
-
-
-
 }
 
 @Composable
@@ -144,7 +161,7 @@ fun SubjectCardSection(
             }
         }
 
-        Spacer(modifier= Modifier.height(8.dp))
+//        Spacer(modifier= Modifier.height(8.dp))
 
         //Empty subject message
         if (subjectList.isEmpty()){
@@ -167,7 +184,7 @@ fun SubjectCardSection(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(start = 12.dp, end = 12.dp)
+                contentPadding = PaddingValues(start = 6.dp, end = 6.dp)
             ) {
                 items(subjectList){ subject ->
                     SubjectCard(

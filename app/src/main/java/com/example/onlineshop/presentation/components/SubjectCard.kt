@@ -27,16 +27,17 @@ fun SubjectCard(
     onClick: () -> Unit
 ) {
     Box (
-        modifier = modifier.size(150.dp)
+        modifier = modifier
+            .size(150.dp)
+            .background(
+                brush = Brush.verticalGradient(gradientColor),
+                shape = MaterialTheme.shapes.medium
+            )
     ) {
         Column (
             modifier = Modifier
-                .padding(12.dp)
-                .clickable { onClick }
-                .background(
-                    brush = Brush.verticalGradient(gradientColor),
-                    shape = MaterialTheme.shapes.medium
-                ),
+                .padding(10.dp)
+                .clickable { onClick },
             verticalArrangement = Arrangement.Center,
         ) {
             Image(
@@ -46,7 +47,7 @@ fun SubjectCard(
             )
             Text(
                 text = subjectName,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 color = Color.White
             )
         }
