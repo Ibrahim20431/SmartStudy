@@ -33,11 +33,11 @@ fun SubjectCard(
                 brush = Brush.verticalGradient(gradientColor),
                 shape = MaterialTheme.shapes.medium
             )
+            .clickable { onClick() },
     ) {
         Column (
             modifier = Modifier
-                .padding(10.dp)
-                .clickable { onClick },
+                .padding(10.dp),
             verticalArrangement = Arrangement.Center,
         ) {
             Image(

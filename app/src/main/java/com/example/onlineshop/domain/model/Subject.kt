@@ -8,6 +8,7 @@ import com.example.onlineshop.presentation.ui.theme.gradient4
 import com.example.onlineshop.presentation.ui.theme.gradient5
 
 data class Subject(
+    val id : Int,
     val name : String,
     val goalHours : Float,
     val colors : List<Color>
