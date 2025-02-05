@@ -44,6 +44,7 @@ import com.example.onlineshop.presentation.components.DashboardScreenTopBar
 import com.example.onlineshop.domain.model.Subject
 import com.example.onlineshop.domain.model.Task
 import com.example.onlineshop.presentation.components.AddSubjectDialog
+import com.example.onlineshop.presentation.components.DeleteDialog
 import com.example.onlineshop.presentation.components.SubjectCard
 import com.example.onlineshop.presentation.components.studySessionsList
 import com.example.onlineshop.presentation.components.tasksList
@@ -75,9 +76,9 @@ fun DashboardScrean() {
     )
 
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
-    var subjectName by remember { mutableStateOf("") }
-    var goalHours by remember { mutableStateOf("") }
-    var selectColors by remember { mutableStateOf(Subject.subjectsCardColors.random()) }
+    var subjectName by rememberSaveable { mutableStateOf("") }
+    var goalHours by rememberSaveable { mutableStateOf("") }
+    var selectColors by rememberSaveable { mutableStateOf(Subject.subjectsCardColors.random()) }
 
     AddSubjectDialog(
         isOpen = isAddSubjectDialogOpen,
@@ -89,6 +90,16 @@ fun DashboardScrean() {
         onGoalHoursChange = { goalHours = it },
         selectColors = selectColors,
         onColorChange = { selectColors = it },
+    )
+
+    var isDeleteDialogOpen by rememberSaveable { mutableStateOf(false) }
+
+    DeleteDialog(
+        isOpen = isDeleteDialogOpen,
+        title = "Delete Session ???!",
+        bodyText = "Are you sure you want to delete this Session ??\nYour studied hours will be reduced",
+        onConfirmButtonClicked = {isDeleteDialogOpen = false},
+        onDismissRequest = {isDeleteDialogOpen = false},
     )
 
     Scaffold (
@@ -144,7 +155,7 @@ fun DashboardScrean() {
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyListText = "You don't have any upcoming tasks.\nplease, Click on + to add new subject",
                 sessions = sessionsList,
-                onDeleteIconClick = {}
+                onDeleteIconClick = {isDeleteDialogOpen = true}
             )
 
         }
@@ -266,10 +277,7 @@ fun RecentStudySection(
                 text = "RECENT STUDY SECTION",
                 style = MaterialTheme.typography.bodySmall
             )
-
             Spacer(modifier= Modifier.height(12.dp))
-
-
         }
     }
 }
