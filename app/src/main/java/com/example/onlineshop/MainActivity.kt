@@ -16,6 +16,7 @@ import com.example.onlineshop.domain.model.Subject
 import com.example.onlineshop.domain.model.Task
 import com.example.onlineshop.presentation.features.dashboard.DashboardScrean
 import com.example.onlineshop.presentation.features.subjectDetails.SubjectDetails
+import com.example.onlineshop.presentation.features.task.TaskScreen
 import com.example.onlineshop.presentation.ui.theme.OnlineShopTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +26,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             OnlineShopTheme {
 //                DashboardScrean()
-                SubjectDetails()
+//                SubjectDetails()
+                TaskScreen()
             }
         }
     }

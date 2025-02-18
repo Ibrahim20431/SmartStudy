@@ -54,21 +54,22 @@ fun SubjectDetails() {
     var scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState = rememberLazyListState()
     val isFABExtended by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
-    var isDeleteDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var isDeleteSessionDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var isDeleteSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     DeleteDialog(
-        isOpen = isDeleteDialogOpen,
+        isOpen = isDeleteSessionDialogOpen,
         title = "Delete Session ???!",
         bodyText = "Are you sure you want to delete this Session ??\nYour studied hours will be reduced",
-        onConfirmButtonClicked = {isDeleteDialogOpen = false},
-        onDismissRequest = {isDeleteDialogOpen = false},
+        onConfirmButtonClicked = {isDeleteSessionDialogOpen = false},
+        onDismissRequest = {isDeleteSessionDialogOpen = false},
     )
     DeleteDialog(
-        isOpen = isDeleteDialogOpen,
+        isOpen = isDeleteSubjectDialogOpen,
         title = "Delete Subject ???!",
-        bodyText = "Are you sure you want to delete this Subject ??\nYour studied hours will be reduced",
-        onConfirmButtonClicked = {isDeleteDialogOpen = false},
-        onDismissRequest = {isDeleteDialogOpen = false},
+        bodyText = "Are you sure you want to delete this Subject ??\nAll related tasks and study sessions will be removed",
+        onConfirmButtonClicked = {isDeleteSubjectDialogOpen = false},
+        onDismissRequest = {isDeleteSubjectDialogOpen = false},
     )
 
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
@@ -94,8 +95,8 @@ fun SubjectDetails() {
             SubjectDetailsTopBar(
                 title = "English",
                 onBackClicked = {},
-                onDeleteClicked = {},
-                onEditeClicked = {},
+                onDeleteClicked = { isDeleteSubjectDialogOpen = true},
+                onEditeClicked = { isAddSubjectDialogOpen = true},
                 scrollBehavior = scrollBehavior
             )
         },
@@ -150,7 +151,7 @@ fun SubjectDetails() {
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyListText = "You don't have any upcoming tasks.\nplease, Click on + to add new subject",
                 sessions = sessions,
-                onDeleteIconClick = {isDeleteDialogOpen = true}
+                onDeleteIconClick = { isDeleteSessionDialogOpen = true }
             )
         }
 
