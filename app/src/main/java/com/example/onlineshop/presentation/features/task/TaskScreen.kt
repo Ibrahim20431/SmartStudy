@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,8 +43,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.onlineshop.presentation.components.DeleteDialog
+import com.example.onlineshop.presentation.components.SubjectListBottomSheet
 import com.example.onlineshop.presentation.components.TaskCheckBox
 import com.example.onlineshop.presentation.components.TaskDatePicker
+import com.example.onlineshop.subjectList
 import com.example.onlineshop.util.Priority
 import com.example.onlineshop.util.convertMillisDatetoString
 import com.google.firebase.annotations.concurrent.Background
@@ -58,7 +61,9 @@ fun TaskScreen() {
     var description by remember { mutableStateOf("") }
     var isDeleteDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isDatePickerOpen by rememberSaveable { mutableStateOf(false) }
-    var dataPickerState = rememberDatePickerState(initialSelectedDateMillis = Instant.now().toEpochMilli())
+    var isBottomSheetOpen by rememberSaveable { mutableStateOf(false) }
+    val dataPickerState = rememberDatePickerState(initialSelectedDateMillis = Instant.now().toEpochMilli())
+    val sheetState = rememberModalBottomSheetState()
 
     var taskTitleError by rememberSaveable { mutableStateOf<String?>(null) }
     taskTitleError = when {
@@ -89,6 +94,14 @@ fun TaskScreen() {
         isOpen = isDatePickerOpen,
         onDismissReqest = { isDatePickerOpen = false },
         onComfirmClicked = { isDatePickerOpen = false }
+    )
+
+    SubjectListBottomSheet(
+        sheetState = sheetState,
+        isOpen = isBottomSheetOpen,
+        subjects = subjectList,
+        onDismissRequest = { isBottomSheetOpen = false},
+        onSubjectClicked = {}
     )
 
     Scaffold (
@@ -177,7 +190,7 @@ fun TaskScreen() {
                     text = "English",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = {}) {
+                IconButton(onClick = { isBottomSheetOpen = true }) {
                     Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "")
                 }
             }
