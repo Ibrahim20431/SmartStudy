@@ -45,11 +45,31 @@ import com.example.onlineshop.presentation.components.studySessionsList
 import com.example.onlineshop.presentation.components.tasksList
 import com.example.onlineshop.sessions
 import com.example.onlineshop.tasks
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
+data class SubjectScreenNavArg(
+    val subjectId : Int
+)
+
+@Destination(navArgsDelegate = SubjectScreenNavArg::class)
+@Composable
+fun SubjectDetailsRoute(navigator: DestinationsNavigator) {
+    SubjectDetails(
+        onBackButtonClick = {navigator.navigateUp()},
+        onAddTaskClick = {},
+        onTaskCardClick = {}
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun SubjectDetails() {
+private fun SubjectDetails(
+    onBackButtonClick: () -> Unit,
+    onAddTaskClick: () -> Unit,
+    onTaskCardClick: (Int?) -> Unit,
+) {
 
     var scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState = rememberLazyListState()
@@ -94,7 +114,7 @@ fun SubjectDetails() {
         topBar = {
             SubjectDetailsTopBar(
                 title = "English",
-                onBackClicked = {},
+                onBackClicked = onBackButtonClick,
                 onDeleteClicked = { isDeleteSubjectDialogOpen = true},
                 onEditeClicked = { isAddSubjectDialogOpen = true},
                 scrollBehavior = scrollBehavior
@@ -102,7 +122,7 @@ fun SubjectDetails() {
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = {  },
+                onClick = { onAddTaskClick() },
                 icon = { Icon(Icons.Default.Add, contentDescription = "Add") },
                 text = { Text(text = "Add task") },
                 expanded = isFABExtended
@@ -132,7 +152,7 @@ fun SubjectDetails() {
                 emptyListText = "You don't have any upcoming tasks.\nplease, Click on + to add new subject",
                 tasks = tasks,
                 onCheckBoxClick = {},
-                onTaskCardList = {}
+                onTaskCardClicked = onTaskCardClick
             )
 
             item { Spacer(modifier = Modifier.height(20.dp)) }
@@ -142,7 +162,7 @@ fun SubjectDetails() {
                 emptyListText = "You don't have any completed tasks.\nplease, Click the check box of task",
                 tasks = tasks,
                 onCheckBoxClick = {},
-                onTaskCardList = {}
+                onTaskCardClicked = onTaskCardClick
             )
 
             item { Spacer(modifier = Modifier.height(20.dp)) }

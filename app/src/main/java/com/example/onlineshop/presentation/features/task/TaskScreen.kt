@@ -50,12 +50,27 @@ import com.example.onlineshop.subjectList
 import com.example.onlineshop.util.Priority
 import com.example.onlineshop.util.convertMillisDatetoString
 import com.google.firebase.annotations.concurrent.Background
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.Instant
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+data class TaskScreenNavArg(
+    val taskId : Int?,
+    val subjectId : Int?
+)
+
+@Destination(navArgsDelegate = TaskScreenNavArg::class)
 @Composable
-fun TaskScreen() {
+fun TaskScreenRoute(navigator : DestinationsNavigator) {
+    TaskScreen(onBackButtonClick = {navigator.navigateUp()})
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+//@Preview(showBackground = true)
+@Composable
+private fun TaskScreen(
+    onBackButtonClick: () -> Unit
+) {
 
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -110,7 +125,7 @@ fun TaskScreen() {
             isTaskExist = true,
             isComplete = false,
             checkboxBorderColors = Color.Red,
-            onBackButtonClick = {},
+            onBackButtonClick = onBackButtonClick,
             onDeleteButtonClick = {isDeleteDialogOpen = true},
             onCheckboxClick = {}
         )}
@@ -198,7 +213,9 @@ fun TaskScreen() {
             Button(
                 enabled = taskTitleError == null,
                 onClick = {},
-                modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 20.dp)
             ) {
                 Text(text = "Save")
             }

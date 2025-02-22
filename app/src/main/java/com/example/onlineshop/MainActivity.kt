@@ -4,20 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.onlineshop.domain.model.Session
 import com.example.onlineshop.domain.model.Subject
 import com.example.onlineshop.domain.model.Task
-import com.example.onlineshop.presentation.features.dashboard.DashboardScrean
-import com.example.onlineshop.presentation.features.subjectDetails.SubjectDetails
-import com.example.onlineshop.presentation.features.task.TaskScreen
+import com.example.onlineshop.presentation.features.NavGraphs
 import com.example.onlineshop.presentation.ui.theme.OnlineShopTheme
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.spec.NavGraphSpec
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OnlineShopTheme {
-//                DashboardScrean()
-//                SubjectDetails()
-                TaskScreen()
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }

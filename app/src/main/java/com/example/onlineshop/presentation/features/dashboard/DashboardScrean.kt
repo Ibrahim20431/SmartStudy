@@ -1,6 +1,5 @@
 package com.example.onlineshop.presentation.features.dashboard
 
-import android.content.ClipData.Item
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,26 +33,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.onlineshop.R
-import com.example.onlineshop.domain.model.Session
 import com.example.onlineshop.presentation.components.CountCard
 import com.example.onlineshop.presentation.components.DashboardScreenTopBar
 import com.example.onlineshop.domain.model.Subject
-import com.example.onlineshop.domain.model.Task
 import com.example.onlineshop.presentation.components.AddSubjectDialog
 import com.example.onlineshop.presentation.components.DeleteDialog
 import com.example.onlineshop.presentation.components.SubjectCard
 import com.example.onlineshop.presentation.components.studySessionsList
 import com.example.onlineshop.presentation.components.tasksList
+import com.example.onlineshop.presentation.features.destinations.SessionScreenRouteDestination
+import com.example.onlineshop.presentation.features.destinations.SubjectDetailsRouteDestination
+import com.example.onlineshop.presentation.features.destinations.TaskScreenRouteDestination
+import com.example.onlineshop.presentation.features.subjectDetails.SubjectScreenNavArg
+import com.example.onlineshop.presentation.features.task.TaskScreenNavArg
 import com.example.onlineshop.sessions
 import com.example.onlineshop.subjectList
 import com.example.onlineshop.tasks
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Preview(showBackground = true)
+@Destination(start = true)
 @Composable
-fun DashboardScrean() {
+fun DashboardScreenRoute(navigator: DestinationsNavigator) {
+    DashboardScrean(
+        onSubjectCardClicked = { subjetId ->
+            subjetId?.let {
+                val navArg = SubjectScreenNavArg(subjectId = subjetId)
+                navigator.navigate(SubjectDetailsRouteDestination(navArgs = navArg))
+            }
+        },
+        onTaskCardClicked = { taskId ->
+            val navArg = TaskScreenNavArg(taskId = taskId, subjectId = null)
+            navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
+        },
+        onStartSessionButtonClicked = {
+            navigator.navigate(SessionScreenRouteDestination())
+        }
+    )
+}
+
+//@Preview(showBackground = true)
+@Composable
+private fun DashboardScrean(
+    onSubjectCardClicked: (Int?) -> Unit,
+    onTaskCardClicked: (Int?) -> Unit,
+    onStartSessionButtonClicked: () -> Unit,
+) {
 
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
     var subjectName by rememberSaveable { mutableStateOf("") }
@@ -107,13 +133,14 @@ fun DashboardScrean() {
                 SubjectCardSection(
                     modifier = Modifier.fillMaxWidth(),
                     subjectList = subjectList,
-                    onAddSubjectClicked = {isAddSubjectDialogOpen = true}
+                    onAddSubjectClicked = {isAddSubjectDialogOpen = true},
+                    onSubjectCardClicked = onSubjectCardClicked
                 )
             }
 
             item {
                 Button(
-                    onClick = {},
+                    onClick = onStartSessionButtonClicked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp, vertical = 20.dp)
@@ -127,7 +154,7 @@ fun DashboardScrean() {
                 emptyListText = "You don't have any upcoming tasks.\nplease, Click on + to add new subject",
                 tasks = tasks,
                 onCheckBoxClick = {},
-                onTaskCardList = {}
+                onTaskCardClicked = onTaskCardClicked
             )
 
             item { Spacer(modifier = Modifier.height(20.dp)) }
@@ -185,6 +212,7 @@ fun SubjectCardSection(
     modifier: Modifier,
     subjectList: List<Subject>,
     onAddSubjectClicked : () -> Unit,
+    onSubjectCardClicked : (Int?) -> Unit,
     emptyListText: String = "You don't have any subject.\nplease, Click on + to add new subject",
 ) {
     Column (modifier = modifier) {
@@ -237,7 +265,7 @@ fun SubjectCardSection(
                     SubjectCard(
                         subjectName = subject.name,
                         gradientColor = subject.colors,
-                        onClick =  {}
+                        onClick =  {onSubjectCardClicked(subject.id) }
                     )
                 }
             }
@@ -250,7 +278,9 @@ fun SubjectCardSection(
 fun RecentStudySection(
     modifier: Modifier = Modifier,
 ) {
-    Column (modifier = modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp)) {
+    Column (modifier = modifier
+        .fillMaxWidth()
+        .padding(horizontal = 12.dp, vertical = 6.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ){
